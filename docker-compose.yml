@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  web:
+    env_file:
+      - .env
+    build:
+      context: '.docker/web'
+      args:
+          PHP_VERSION: ${PHP_VERSION}
+          COMPOSER_VERSION: ${COMPOSER_VERSION}
+    volumes:
+      - ../.:/var/www
+      - ../config/local/.auth:/var/www/.auth
+      - ../config/local/settings.php:/var/www/config/settings.php
+    container_name: ${APP_NAME}_web
+
+  nginx:
+    env_file:
+      - .env
+    build:
+      context: '.docker/nginx'
+    ports:
+        - "80:80"
+        - "443:443"
+    volumes:
+        - ../.:/var/www
+    container_name: ${APP_NAME}_nginx
+
+
